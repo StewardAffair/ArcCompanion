@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">ArcCompanion</string>
+    <string name="find_your_chuck_joke">Find your Chuck joke</string>
+    <string name="find_button">find</string>
+    <string name="enter_your_key">Enter key world here</string>
+</resources>
