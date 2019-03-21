@@ -7,6 +7,7 @@ import com.lohika.arccompanion.data.network.api.ChuckJokeApi
 import com.lohika.arccompanion.data.network.api.StandUpJokeApi
 import com.lohika.arccompanion.domain.ChuckUseCase
 import com.lohika.arccompanion.domain.StandUpUseCase
+import com.lohika.arccompanion.presentation.mvi.badoo.ChuckJokeFeature
 import com.lohika.arccompanion.presentation.mvp.base.JokePresenter
 import com.lohika.arccompanion.presentation.mvp.moxy.JokeMoxyPresenter
 import com.lohika.arccompanion.presentation.mvvm.aac.JokeViewModel
@@ -45,4 +46,6 @@ val appModule = module {
     single { MainViewModelFactory(get(), get()) }
 
     viewModel { JokeViewModel(get(), get()) }
+
+    single { ChuckJokeFeature(get()) }
 }

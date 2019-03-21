@@ -10,7 +10,7 @@ android {
     compileSdkVersion 28
     defaultConfig {
         applicationId 'com.lohika.arccompanion'
-        minSdkVersion 21
+        minSdkVersion 24
         targetSdkVersion 28
         versionCode 1
         versionName '1.0'
@@ -58,6 +58,7 @@ dependencies {
     implementation 'com.airbnb.android:mvrx:0.7.2'
 
     implementation 'com.github.badoo.mvicore:mvicore:1.1.6'
+    implementation 'com.github.badoo.mvicore:mvicore-android:1.1.6'
 
     implementation 'com.jakewharton.rxbinding3:rxbinding:3.0.0-alpha2'
     implementation 'com.jakewharton.rxbinding3:rxbinding-core:3.0.0-alpha2'
