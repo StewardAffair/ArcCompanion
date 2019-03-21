@@ -2,13 +2,13 @@ package com.lohika.arccompanion.presentation.di
 
 import android.app.Application
 import com.lohika.arccompanion.R
+import com.lohika.arccompanion.data.network.NetworkFactory
 import com.lohika.arccompanion.data.network.api.ChuckJokeApi
 import com.lohika.arccompanion.data.network.api.StandUpJokeApi
-import com.lohika.arccompanion.data.network.NetworkFactory
 import com.lohika.arccompanion.domain.ChuckUseCase
 import com.lohika.arccompanion.domain.StandUpUseCase
-import com.lohika.arccompanion.presentation.mvi.base.JokeMVIPresenter
 import com.lohika.arccompanion.presentation.mvp.base.JokePresenter
+import com.lohika.arccompanion.presentation.mvp.moxy.JokeMoxyPresenter
 import com.lohika.arccompanion.presentation.mvvm.aac.JokeViewModel
 import com.lohika.arccompanion.presentation.mvvm.aac.MainViewModelFactory
 import com.lohika.arccompanion.presentation.mvvm.binding.JokeBindingViewModel
@@ -37,6 +37,8 @@ val appModule = module {
     single { ChuckUseCase(get()) }
 
     single { JokePresenter(get(), get()) }
+
+    single { JokeMoxyPresenter(get(), get()) }
 
     single { JokeBindingViewModel (get(), get())}
 
