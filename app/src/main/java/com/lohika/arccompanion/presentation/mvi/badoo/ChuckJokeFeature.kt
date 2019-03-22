@@ -1,27 +1,30 @@
 package com.lohika.arccompanion.presentation.mvi.badoo
 
 import com.badoo.mvicore.element.Actor
-import com.badoo.mvicore.element.Bootstrapper
 import com.badoo.mvicore.element.NewsPublisher
 import com.badoo.mvicore.element.Reducer
 import com.badoo.mvicore.feature.ActorReducerFeature
 import com.lohika.arccompanion.data.model.ChuckJoke
 import com.lohika.arccompanion.data.network.api.ChuckJokeApi
+import com.lohika.arccompanion.presentation.mvi.badoo.ChuckJokeFeature.*
+import com.lohika.arccompanion.presentation.mvi.badoo.ChuckJokeFeature.Effect.*
+import com.lohika.arccompanion.presentation.mvi.badoo.ChuckJokeFeature.News.ErrorExecutingRequest
+import com.lohika.arccompanion.presentation.mvi.badoo.ChuckJokeFeature.News.Received
+import com.lohika.arccompanion.presentation.mvi.badoo.ChuckJokeFeature.Wish.SearchJoke
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
 class ChuckJokeFeature(api: ChuckJokeApi) :
-    ActorReducerFeature<ChuckJokeFeature.Wish, ChuckJokeFeature.Effect, ChuckJokeFeature.State, ChuckJokeFeature.News>(
+    ActorReducerFeature<Wish, Effect, State, News>(
         initialState = State(),
-        bootstrapper = BootStrapperImpl(),
         actor = ActorImpl(api),
         reducer = ReducerImpl(),
         newsPublisher = NewsPublisherImpl()
     ) {
 
     sealed class Wish {
-        class SearchJoke(val querry: String) : Wish()
+        class SearchJoke(val query: String) : Wish()
     }
 
     sealed class Effect {
@@ -31,30 +34,27 @@ class ChuckJokeFeature(api: ChuckJokeApi) :
     }
 
     sealed class News {
+        object Received : News()
         data class ErrorExecutingRequest(val throwable: Throwable) : News()
     }
 
     data class State(
         val showLoading: Boolean = false,
-        val firsJokeText: String = ""
+        val jokeText: String = ""
     )
 
-    class BootStrapperImpl : Bootstrapper<Wish> {
-        override fun invoke(): Observable<Wish> = Observable.just(Wish.SearchJoke(""))
-    }
-
     class ActorImpl(private val api: ChuckJokeApi) : Actor<State, Wish, Effect> {
-        override fun invoke(p1: State, wish: Wish): Observable<out Effect> =
+        override fun invoke(state: State, wish: Wish): Observable<out Effect> =
             when (wish) {
-                is Wish.SearchJoke -> api.findJoke(wish.querry)
+                is SearchJoke -> api.findJoke(wish.query)
                     .map {
                         it.result.firstOrNull() ?: ChuckJoke(
                             emptyList(), "", "", "", ""
                         )
-                    }.map { Effect.JokeReceived(it) as Effect }
+                    }.map { JokeReceived(it) as Effect }
                     .toObservable()
-                    .startWith(Observable.just(Effect.StartedLoading))
-                    .onErrorReturn { Effect.ErrorLoading(it) }
+                    .startWith(Observable.just(StartedLoading))
+                    .onErrorReturn { ErrorLoading(it) }
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
             }
@@ -62,15 +62,16 @@ class ChuckJokeFeature(api: ChuckJokeApi) :
 
     class ReducerImpl : Reducer<State, Effect> {
         override fun invoke(state: State, effect: Effect): State = when (effect) {
-            Effect.StartedLoading -> State(showLoading = true)
-            is Effect.JokeReceived -> State(showLoading = false, firsJokeText = effect.joke.value)
-            is Effect.ErrorLoading -> State(showLoading = false)
+            StartedLoading -> State(showLoading = true)
+            is JokeReceived -> State(showLoading = false, jokeText = effect.joke.value)
+            is ErrorLoading -> State(showLoading = false)
         }
     }
 
     class NewsPublisherImpl : NewsPublisher<Wish, Effect, State, News> {
         override fun invoke(wish: Wish, effect: Effect, state: State): News? = when (effect) {
-            is Effect.ErrorLoading -> News.ErrorExecutingRequest(effect.throwable)
+            is ErrorLoading -> ErrorExecutingRequest(effect.throwable)
+            is JokeReceived -> Received
             else -> null
         }
     }

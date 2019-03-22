@@ -8,6 +8,8 @@ import com.lohika.arccompanion.data.network.api.StandUpJokeApi
 import com.lohika.arccompanion.domain.ChuckUseCase
 import com.lohika.arccompanion.domain.StandUpUseCase
 import com.lohika.arccompanion.presentation.mvi.badoo.ChuckJokeFeature
+import com.lohika.arccompanion.presentation.mvi.badoo.NewsListener
+import com.lohika.arccompanion.presentation.mvi.badoo.StandUpJokeFeature
 import com.lohika.arccompanion.presentation.mvp.base.JokePresenter
 import com.lohika.arccompanion.presentation.mvp.moxy.JokeMoxyPresenter
 import com.lohika.arccompanion.presentation.mvvm.aac.JokeViewModel
@@ -48,4 +50,8 @@ val appModule = module {
     viewModel { JokeViewModel(get(), get()) }
 
     single { ChuckJokeFeature(get()) }
+
+    single { StandUpJokeFeature(get(), get()) }
+
+    single { NewsListener() }
 }

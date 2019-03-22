@@ -12,7 +12,7 @@ import org.koin.android.ext.android.get
 class JokeBadooFragment : ObservableSourseFragment<UIEvent>(), Consumer<JokeBadooViewModel> {
 
     private val binder: JokeFragmentBinder by lazy {
-        JokeFragmentBinder(this, get())
+        JokeFragmentBinder(this, get(), get(), get())
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
