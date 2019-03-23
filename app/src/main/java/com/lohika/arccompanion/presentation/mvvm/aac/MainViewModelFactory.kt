@@ -5,7 +5,11 @@ import androidx.lifecycle.ViewModelProvider
 import com.lohika.arccompanion.domain.ChuckUseCase
 import com.lohika.arccompanion.domain.StandUpUseCase
 
-class MainViewModelFactory(private val chuckUseCase: ChuckUseCase, private val standUpUseCase: StandUpUseCase)  : ViewModelProvider.Factory {
+@Suppress("UNCHECKED_CAST")
+class MainViewModelFactory(
+    private val chuckUseCase: ChuckUseCase,
+    private val standUpUseCase: StandUpUseCase
+) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(JokeViewModel::class.java)) {

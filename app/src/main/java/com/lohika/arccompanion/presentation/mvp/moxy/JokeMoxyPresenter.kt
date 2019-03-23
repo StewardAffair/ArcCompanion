@@ -21,10 +21,11 @@ class JokeMoxyPresenter(val chuckUseCase: ChuckUseCase, val standUpUseCase: Stan
                 viewState.showFirstJoke("")
                 viewState.showSecondJoke("")
                 viewState.changeFirstProgressBarVisibility(isNeedToShow = true)
-                viewState.changeSecondProgressBarVisibility(isNeedToShow = true)
+                viewState.changeSecondProgressBarVisibility(isNeedToShow = false)
             }
             .doOnSuccess { joke ->
                 viewState.changeFirstProgressBarVisibility(isNeedToShow = false)
+                viewState.changeSecondProgressBarVisibility(isNeedToShow = true)
                 viewState.showFirstJoke(joke.value)
             }
             .flatMap { standUpUseCase(UseCase.None()) }

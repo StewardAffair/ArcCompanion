@@ -10,23 +10,23 @@ import io.reactivex.disposables.CompositeDisposable
 
 class JokeViewModel(val chuckUseCase: ChuckUseCase, val standUpUseCase: StandUpUseCase) : ViewModel() {
 
-    val liveData: MutableLiveData<JokeParam> = MutableLiveData()
+    val liveData: MutableLiveData<JokeState> = MutableLiveData()
     private val compositeDisposable = CompositeDisposable()
 
-    fun onSeachButtonClicked(query: String) {
+    fun onSearchButtonClicked(query: String) {
         compositeDisposable.add(chuckUseCase(query)
             .observeOn(AndroidSchedulers.mainThread())
             .doOnSubscribe {
-                liveData.postValue(JokeParam.EmptyDataParam())
+                liveData.postValue(JokeState.EmptyDataState())
             }
             .doOnSuccess { joke ->
-                liveData.postValue(JokeParam.FirstJokeParam(firsJokeText = joke.value))
+                liveData.postValue(JokeState.FirstJokeState(firsJokeText = joke.value))
             }
             .flatMap { standUpUseCase(UseCase.None()) }
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe { joke ->
                 liveData.postValue(
-                    JokeParam.SecondJokeParam(
+                    JokeState.SecondJokeState(
                         firsJokeText = liveData.value?.firsJokeText ?: "",
                         secondJokeText = joke.setup + " " + joke.punchline
                     )
@@ -39,24 +39,25 @@ class JokeViewModel(val chuckUseCase: ChuckUseCase, val standUpUseCase: StandUpU
         compositeDisposable.clear()
     }
 
-    sealed class JokeParam(
+    sealed class JokeState(
         open val showFirstLoading: Boolean = true,
-        open val showSecondLoading: Boolean = true,
+        open val showSecondLoading: Boolean = false,
         open val firsJokeText: String = "",
         open val secondJokeText: String = ""
     ) {
-        class EmptyDataParam : JokeParam()
+        class EmptyDataState : JokeState()
 
-        data class FirstJokeParam(
+        data class FirstJokeState(
             override val firsJokeText: String,
-            override val showFirstLoading: Boolean = false
-        ) : JokeParam()
+            override val showFirstLoading: Boolean = false,
+            override val showSecondLoading: Boolean = true
+        ) : JokeState()
 
-        data class SecondJokeParam(
+        data class SecondJokeState(
             override val firsJokeText: String,
             override val secondJokeText: String,
             override val showFirstLoading: Boolean = false,
             override val showSecondLoading: Boolean = false
-        ) : JokeParam()
+        ) : JokeState()
     }
 }
