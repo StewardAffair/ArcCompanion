@@ -11,12 +11,12 @@ import io.reactivex.subjects.BehaviorSubject
 class JokeMVIPresenter(
     val chuckUseCase: ChuckUseCase,
     val standUpUseCase: StandUpUseCase,
-    var firstLoadingConsumer: Consumer<in Boolean>,
-    var secondLoadingConsumer: Consumer<in Boolean>,
-    var firstJokeConsumer: Consumer<in String>,
-    var secondJokeConsumer: Consumer<in String>,
-    var findButtonClicks: Observable<Unit>,
-    var searchEditTextSubject: BehaviorSubject<String>
+    private var firstLoadingConsumer: Consumer<in Boolean>,
+    private var secondLoadingConsumer: Consumer<in Boolean>,
+    private var firstJokeConsumer: Consumer<in String>,
+    private var secondJokeConsumer: Consumer<in String>,
+    private var findButtonClicks: Observable<Unit>,
+    private var searchEditTextSubject: BehaviorSubject<String>
 ) : BaseMVIPresenter<JokeMviView>() {
 
     override fun bind() {
@@ -27,10 +27,11 @@ class JokeMVIPresenter(
                 firstJokeConsumer.accept("")
                 secondJokeConsumer.accept("")
                 firstLoadingConsumer.accept(true)
-                secondLoadingConsumer.accept(true)
+                secondLoadingConsumer.accept(false)
             }
             .doOnNext { joke ->
                 firstLoadingConsumer.accept(false)
+                secondLoadingConsumer.accept(true)
                 firstJokeConsumer.accept(joke.value)
             }
             .flatMap { standUpUseCase(UseCase.None()).toObservable() }

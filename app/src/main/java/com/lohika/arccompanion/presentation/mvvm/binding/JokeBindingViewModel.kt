@@ -8,7 +8,10 @@ import com.lohika.arccompanion.domain.UseCase
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 
-class JokeBindingViewModel(val chuckUseCase: ChuckUseCase, val standUpUseCase: StandUpUseCase) : BaseObservable() {
+class JokeBindingViewModel(
+    val chuckUseCase: ChuckUseCase,
+    val standUpUseCase: StandUpUseCase
+) : BaseObservable() {
 
     @Bindable
     var secondJoke: CharSequence = ""
@@ -27,15 +30,16 @@ class JokeBindingViewModel(val chuckUseCase: ChuckUseCase, val standUpUseCase: S
     fun searchButtonClicked(query: String) {
         compositeDisposable.add(chuckUseCase(query)
             .observeOn(AndroidSchedulers.mainThread())
-            .doOnSubscribe{
+            .doOnSubscribe {
                 firstJoke = ""
                 secondJoke = ""
                 firstProgressBarVisibility = true
-                secondProgressBarVisibility = true
+                secondProgressBarVisibility = false
                 notifyChange()
             }
             .doOnSuccess { joke ->
                 firstProgressBarVisibility = false
+                secondProgressBarVisibility = true
                 firstJoke = joke?.value ?: ""
                 notifyChange()
             }
@@ -43,7 +47,10 @@ class JokeBindingViewModel(val chuckUseCase: ChuckUseCase, val standUpUseCase: S
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe { joke ->
                 secondProgressBarVisibility = false
-                secondJoke = joke?.let { it.setup + " " + it.punchline } ?: ""
+                secondJoke = joke?.let {
+                    it.setup + " " +
+                            it.punchline
+                } ?: ""
                 notifyChange()
             })
     }

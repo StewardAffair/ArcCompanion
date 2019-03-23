@@ -1,9 +1,9 @@
 package com.lohika.arccompanion.presentation.mvp.base
 
 import android.content.Context
-import android.os.Bundle
 import androidx.fragment.app.Fragment
 
+@Suppress("UNCHECKED_CAST")
 abstract class BaseMVPFragment<VIEW : View, PRESENTER : Presenter<VIEW>> : Fragment(),
     View {
 
@@ -15,11 +15,6 @@ abstract class BaseMVPFragment<VIEW : View, PRESENTER : Presenter<VIEW>> : Fragm
         super.onAttach(context)
         presenter = initializePresenter()
         presenter.onAttach(this as VIEW)
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        presenter.onCreate()
     }
 
     override fun onDestroy() {

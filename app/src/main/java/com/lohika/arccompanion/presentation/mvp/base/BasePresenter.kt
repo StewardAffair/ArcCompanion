@@ -13,9 +13,6 @@ open class BasePresenter<VIEW : View> :
         this.view = view
     }
 
-    override fun onCreate() {
-    }
-
     override fun onDestroy() {
         compositeDisposable.clear()
     }

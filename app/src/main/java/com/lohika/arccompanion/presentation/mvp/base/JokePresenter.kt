@@ -5,19 +5,21 @@ import com.lohika.arccompanion.domain.StandUpUseCase
 import com.lohika.arccompanion.domain.UseCase
 import io.reactivex.android.schedulers.AndroidSchedulers
 
-class JokePresenter(val chuckUseCase: ChuckUseCase, val standUpUseCase: StandUpUseCase) : BasePresenter<JokeView>() {
+class JokePresenter(val chuckUseCase: ChuckUseCase, val standUpUseCase: StandUpUseCase) :
+    BasePresenter<JokeView>() {
 
-    fun searchButtonClicked(query : String) {
+    fun searchButtonClicked(query: String) {
         chuckUseCase(query)
             .observeOn(AndroidSchedulers.mainThread())
             .doOnSubscribe {
                 view.showFirstJoke("")
                 view.showSecondJoke("")
                 view.changeFirstProgressBarVisibility(isNeedToShow = true)
-                view.changeSecondProgressBarVisibility(isNeedToShow = true)
+                view.changeSecondProgressBarVisibility(isNeedToShow = false)
             }
             .doOnSuccess { joke ->
                 view.changeFirstProgressBarVisibility(isNeedToShow = false)
+                view.changeSecondProgressBarVisibility(isNeedToShow = true)
                 view.showFirstJoke(joke.value)
             }
             .flatMap { standUpUseCase(UseCase.None()) }

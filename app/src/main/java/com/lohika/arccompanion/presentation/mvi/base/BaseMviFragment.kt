@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 
+@Suppress("UNCHECKED_CAST")
 abstract class BaseMviFragment<VIEW : MviView, PRESENTER : MviPresenter<VIEW>> : Fragment() {
 
     protected lateinit var presenter : PRESENTER

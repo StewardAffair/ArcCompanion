@@ -23,7 +23,6 @@ class StandUpJokeFeature(api: StandUpJokeApi, chuckJokeFeature: ChuckJokeFeature
     ) {
 
     sealed class Wish {
-        object None : Wish()
         object SearchJoke : Wish()
     }
 
@@ -48,7 +47,6 @@ class StandUpJokeFeature(api: StandUpJokeApi, chuckJokeFeature: ChuckJokeFeature
                     .onErrorReturn { ErrorLoading(it) }
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                is Wish.None -> Observable.empty()
             }
     }
 
