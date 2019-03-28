@@ -9,7 +9,7 @@ class JokePresenter(val chuckUseCase: ChuckUseCase, val standUpUseCase: StandUpU
     BasePresenter<JokeView>() {
 
     fun searchButtonClicked(query: String) {
-        chuckUseCase(query)
+        compositeDisposable.add(chuckUseCase(query)
             .observeOn(AndroidSchedulers.mainThread())
             .doOnSubscribe {
                 view.showFirstJoke("")
@@ -27,6 +27,6 @@ class JokePresenter(val chuckUseCase: ChuckUseCase, val standUpUseCase: StandUpU
             .subscribe { joke ->
                 view.changeSecondProgressBarVisibility(isNeedToShow = false)
                 view.showSecondJoke(joke.setup + " " + joke.punchline)
-            }.addToSubscriptions()
+            })
     }
 }

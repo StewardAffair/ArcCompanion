@@ -11,24 +11,29 @@ import org.koin.android.ext.android.inject
 class MvpFragment : BaseMVPFragment<JokeView, JokePresenter>(),
     JokeView {
 
-    private val jokePresenter : JokePresenter by inject()
+    private val jokePresenter: JokePresenter by inject()
 
     override fun initializePresenter(): JokePresenter = jokePresenter
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.joke_fragment, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        findButton.setOnClickListener { jokePresenter.searchButtonClicked(searchEditText.text.toString()) }
+        findButton.setOnClickListener {
+            jokePresenter.searchButtonClicked(searchEditText.text.toString())
+        }
     }
 
-    override fun showFirstJoke(jokeString : String) {
+    override fun showFirstJoke(jokeString: String) {
         firstTextView.text = jokeString
     }
 
-    override fun showSecondJoke(jokeString : String) {
+    override fun showSecondJoke(jokeString: String) {
         secondTextView.text = jokeString
     }
 

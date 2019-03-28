@@ -20,7 +20,7 @@ class JokeMVIPresenter(
 ) : BaseMVIPresenter<JokeMviView>() {
 
     override fun bind() {
-        findButtonClicks
+        compositeDisposable.add(findButtonClicks
             .switchMap { chuckUseCase(searchEditTextSubject.value ?: "").toObservable() }
             .observeOn(AndroidSchedulers.mainThread())
             .doOnSubscribe {
@@ -39,7 +39,7 @@ class JokeMVIPresenter(
             .subscribe { joke ->
                 secondLoadingConsumer.accept(false)
                 secondJokeConsumer.accept(joke.setup + " " + joke.punchline)
-            }.addToSubscriptions()
+            })
     }
 
 }

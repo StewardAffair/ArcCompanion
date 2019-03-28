@@ -12,7 +12,11 @@ class JokeMVVMBindingFragment : Fragment() {
 
     private val jokeBindingViewModel : JokeBindingViewModel by inject()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         val binding = JokeFragmentBindingBinding.inflate(inflater, container, false)
         binding.viewModel = jokeBindingViewModel
         return binding.root

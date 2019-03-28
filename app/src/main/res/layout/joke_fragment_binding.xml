@@ -3,7 +3,8 @@
     <data>
         <import type="android.view.View"/>
 
-        <variable name="viewModel" type="com.lohika.arccompanion.presentation.mvvm.binding.JokeBindingViewModel"/>
+        <variable name="viewModel"
+                  type="com.lohika.arccompanion.presentation.mvvm.binding.JokeBindingViewModel"/>
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
             xmlns:android="http://schemas.android.com/apk/res/android"
